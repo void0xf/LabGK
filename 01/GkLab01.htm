@@ -38,24 +38,23 @@
         }
 
         function doMouseMove(evt) {
-    if (!dragging) return;
-    let bounds = canvas.getBoundingClientRect();
-    let x = evt.clientX - bounds.left;
-    let y = evt.clientY - bounds.top;
+            if (!dragging) return;
+            let bounds = canvas.getBoundingClientRect();
+            let x = evt.clientX - bounds.left;
+            let y = evt.clientY - bounds.top;
 
-    if (toolChoice === 0) { // Rectangle tool
-        graphics.fillStyle = getColor(colorChoice);
-        graphics.fillRect(x-20, y-20, 40, 40);
-        graphics.strokeRect(x-20, y-20, 40, 40);
-    } else if (toolChoice === 1) { // Crescent tool
-        drawCrescent(x, y);
-    } else if (toolChoice === 2) { // Crescent Happy Face
-        drawCrescentHappyFace(x, y);
-    }
-    startX = x;
-    startY = y;
-}
-
+            if (toolChoice === 0) { // Rectangle tool
+                graphics.fillStyle = getColor(colorChoice);
+                graphics.fillRect(x-20, y-20, 40, 40);
+                graphics.strokeRect(x-20, y-20, 40, 40);
+            } else if (toolChoice === 1) { // Crescent tool
+                drawCrescent(x, y);
+            } else if (toolChoice === 2) { // Crescent Happy Face
+                drawCrescentHappyFace(x, y);
+            }
+            startX = x;
+            startY = y;
+        }
 
         function doMouseUp() {
             dragging = false;
@@ -84,50 +83,42 @@
         return `rgb(${r},${g},${b})`;
     }
 
+    function drawCrescent(x, y) {
+        graphics.save();
+        graphics.fillStyle = getColor(colorChoice);
+        graphics.beginPath();
+        graphics.arc(x, y, 30, 0, 2 * Math.PI, false);
+        graphics.fill();
+        
+        graphics.globalCompositeOperation = 'destination-out';
+        graphics.beginPath();
+        graphics.arc(x + 15, y, 30, 0, 2 * Math.PI, false);
+        graphics.fill();
+        
+        graphics.restore();
+    }
+
     function drawCrescentHappyFace(x, y) {
-        // Outer circle
+        graphics.fillStyle = "yellow"; // Set the moon color to yellow
         graphics.beginPath();
-        graphics.arc(x, y, 30, 0.2 * Math.PI, 1.8 * Math.PI);
-        graphics.closePath();
+        graphics.arc(x, y, 50, 0.2 * Math.PI, 1.8 * Math.PI, false);
         graphics.fill();
-        // Inner circle to create crescent
-        graphics.fillStyle = "white";
+
+        graphics.fillStyle = "cyan"; // Assuming the background color is cyan as in the image
         graphics.beginPath();
-        graphics.arc(x + 20, y, 20, 0.2 * Math.PI, 1.8 * Math.PI);
-        graphics.closePath();
+        graphics.arc(x + 30, y, 30, 0.2 * Math.PI, 1.8 * Math.PI, false);
         graphics.fill();
-        // Eyes
+
         graphics.fillStyle = "black";
-        graphics.fillCircle(x - 10, y - 10, 3);
-        graphics.fillCircle(x + 10, y - 10, 3);
-        // Smiling mouth
+        graphics.fillCircle(x - 20, y - 10, 5);
+        graphics.fillCircle(x + 5, y - 10, 5);
+
+        graphics.strokeStyle = "black";
         graphics.beginPath();
-        graphics.arc(x, y, 20, 0, Math.PI, false);
+        graphics.moveTo(x - 15, y + 10);
+        graphics.bezierCurveTo(x - 15, y + 25, x + 15, y + 25, x + 15, y + 10);
         graphics.stroke();
     }
-function drawCrescent(x, y) {
-    // Save the current state
-    graphics.save();
-    
-    // Set composite operation for crescent effect
-    graphics.globalCompositeOperation = 'destination-out';
-    
-    // Draw the moon part
-    graphics.fillStyle = getColor(colorChoice);
-    graphics.beginPath();
-    graphics.arc(x, y, 30, 0, 2 * Math.PI, false);
-    graphics.fill();
-    
-    // Draw the shadow part
-    graphics.fillStyle = "white";
-    graphics.beginPath();
-    graphics.arc(x + 15, y, 30, 0, 2 * Math.PI, false);
-    graphics.fill();
-    
-    // Restore the state
-    graphics.restore();
-}
-
 
     function init() {
         canvas = document.getElementById("canvas");
