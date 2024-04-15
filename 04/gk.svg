@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="4in" height="4in"
+     viewBox="0 0 400 400"
+     preserveAspectRatio="xMidYMid">
+    <defs>
+        <g id="shape" fill="none" stroke-width="1" stroke="black">
+            <!-- Dodecagon outline -->
+            <path d="M20,0 L18.4776,-7.6085 L14.1421,-14.1421 L7.6085,-18.4776 L0,-20 L-7.6085,-18.4776 L-14.1421,-14.1421 L-18.4776,-7.6085 L-20,0 L-18.4776,7.6085 L-14.1421,14.1421 L-7.6085,18.4776 L0,20 L7.6085,18.4776 L14.1421,14.1421 L18.4776,7.6085 L20,0 Z"/>
+
+            <!-- Lines from each vertex to the center -->
+            <line x1="20" y1="0" x2="0" y2="0" />
+            <line x1="18.4776" y1="-7.6085" x2="0" y2="0" />
+            <line x1="14.1421" y1="-14.1421" x2="0" y2="0" />
+            <line x1="7.6085" y1="-18.4776" x2="0" y2="0" />
+            <line x1="0" y1="-20" x2="0" y2="0" />
+            <line x1="-7.6085" y1="-18.4776" x2="0" y2="0" />
+            <line x1="-14.1421" y1="-14.1421" x2="0" y2="0" />
+            <line x1="-18.4776" y1="-7.6085" x2="0" y2="0" />
+            <line x1="-20" y1="0" x2="0" y2="0" />
+            <line x1="-18.4776" y1="7.6085" x2="0" y2="0" />
+            <line x1="-14.1421" y1="14.1421" x2="0" y2="0" />
+            <line x1="-7.6085" y1="18.4776" x2="0" y2="0" />
+            <line x1="0" y1="20" x2="0" y2="0" />
+            <line x1="7.6085" y1="18.4776" x2="0" y2="0" />
+            <line x1="14.1421" y1="14.1421" x2="0" y2="0" />
+            <line x1="18.4776" y1="7.6085" x2="0" y2="0" />
+
+            <animateTransform
+                attributeName="transform"
+                type="rotate"
+                from="0 0 0"
+                to="360 0 0"
+                dur="5s"
+                repeatCount="indefinite"/>
+        </g>
+
+        <g id="fan">
+            <use xlink:href="#shape" transform="translate(50,50)"/>
+            <use xlink:href="#shape" transform="translate(150,75)"/>
+
+            <line x1="50" y1="50" x2="150" y2="75" stroke="red" stroke-width="10"/>
+            <path d="M 75 200 L 125 200 L 100 65 Z"/>
+        </g>
+
+    </defs>
+
+    <use xlink:href="#fan" fill="purple" transform="scale(0.75)"/>
+    <use xlink:href="#fan" fill="green" transform="translate(250, 0) scale(0.5)"/>
+    <use xlink:href="#fan" fill="blue" transform="translate(100, 80) "/>
+</svg>
