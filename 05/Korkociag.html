@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+<html>
+
+<!--
+ Use OpenGL and GLUT to draw a simple cube
+  with each face being a different color.  Rotations
+  can be applied with the arrow keys, the page up
+  key, and the page down key.  The home key will set
+  all rotations to 0.  Initial rotations about the
+  x, y, and z axes are 15, -15, and 0.  
+
+  This program is meant as an example of using modeling
+  transforms, with glPushMatrix and glPopMatrix.
+ 
+  Note that this program does not use lighting.
+-->
+
+<head>
+<meta charset="UTF-8">
+<title>Unlit Cube Example</title>
+
+<script src="glsim.js"></script>  <!-- load the OpenGL 1.1 simulation code -->
+
+<script>
+
+    let rotateX = 15;   // rotations of cube about the axes
+    let rotateY = -15;
+    let rotateZ = 0; 
+    
+
+   function display() {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
+    glLoadIdentity();
+    glRotatef(rotateZ, 0, 0, 1);
+    glRotatef(rotateY, 0, 1, 0);
+    glRotatef(rotateX, 1, 0, 0);
+
+    drawHelix(5, 5, 2); // Draws a helix with 5 turns, a total height of 5, and a max radius of 2
+}
+
+function drawHelix(turns, height, maxRadius) {
+    let numPoints = 100 * turns; // Number of points per turn, adjust for smoothness
+    let stepHeight = height / numPoints; // Linear height increment
+    let stepAngle = 2 * Math.PI * turns / numPoints; // Angular increment
+    let colorCycle = ['green', 'blue', 'brown']; // Define more colors as needed
+    let radiusIncrease = maxRadius / numPoints; // Radius increment per point
+
+    glBegin(GL_LINE_STRIP);
+    
+    for (let i = 0; i <= numPoints; i++) {
+        let angle = i * stepAngle;
+        let radius = i * radiusIncrease; // Radius increases gradually
+        let x = radius * Math.cos(angle);
+        let y = radius * Math.sin(angle);
+        let z = i * stepHeight;
+
+        // Cycle through colors
+        glColor3f(
+            colorCycle[i % colorCycle.length] === 'green' ? 0 : colorCycle[i % colorCycle.length] === 'blue' ? 0 : 0.6,
+            colorCycle[i % colorCycle.length] === 'green' ? 1 : 0,
+            colorCycle[i % colorCycle.length] === 'blue' ? 1 : 0.3
+        );
+
+        glVertex3f(x, y, z);
+    }
+
+    glEnd();
+}
+
+    
+    function initGL() {
+        glMatrixMode(GL_PROJECTION);
+        glOrtho(-1, 1, -1, 1, -1, 1);
+        glMatrixMode(GL_MODELVIEW);
+        glEnable(GL_DEPTH_TEST);
+        glClearColor(0, 0, 0, 1);
+    }
+    
+    function doKeyDown(evt) {
+        let key = evt.keyCode;
+        if ( key == 37 ) // left
+           rotateY -= 15;
+        else if ( key == 39 ) // right
+           rotateY += 15;
+        else if ( key == 40) // down
+           rotateX += 15;
+        else if ( key == 38 ) // up
+           rotateX -= 15;
+        else if ( key == 33 ) // page up
+           rotateZ += 15;
+        else if ( key == 34 ) // page down
+           rotateZ -= 15;
+        else if ( key == 36 )  // home
+           rotateX = rotateY = rotateZ = 0;
+        if (key >=34 && key <= 40) {
+            evt.preventDefault();
+        }
+        display();
+    }
+    
+    function init() {  // Called by <body onload="init()">, when the page has loaded.
+        try {
+            glsimUse("glcanvas"); // OpenGL will draw to the canvas with id="glcanvas".
+        }
+        catch (e) {
+            document.getElementById("canvas-holder").innerHTML =
+                "Sorry, an error occured:<br>" + e;
+            return;
+        }
+        document.onkeydown = doKeyDown;
+        initGL();
+        display();
+    }
+
+</script>
+
+</head>
+
+<body onload="init()">
+
+<h3>A Simple Unlit Cube in OpenGL 1.1</h3>
+
+<p>(Rotate using arrow keys, page up, page down, and home keys.)</p>
+
+<noscript>
+<p><b>Sorry, this page requires JavaScript!</b></p>
+</noscript>
+
+<div id="canvas-holder">
+<canvas id="glcanvas" width="500" height="500"></canvas>
+</div>
+
+</body>
+</html>
