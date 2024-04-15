@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Crescent Happy Face Drawing</title>
+<style>
+    body {
+        background-color: #DDDDDD;
+        user-select: none;
+    }
+    canvas {
+        background-color: white;
+        display: block;
+    }
+    #canvasholder {
+        border: 2px solid black;
+        float: left;
+    }
+</style>
+<script>
+    "use strict";
+
+    var canvas, graphics;
+
+    function installMouseHandler() {
+        let dragging = false, startX, startY, toolChoice, colorChoice;
+
+        function doMouseDown(evt) {
+            if (evt.button != 0 || dragging) return;
+            let bounds = canvas.getBoundingClientRect();
+            startX = evt.clientX - bounds.left;
+            startY = evt.clientY - bounds.top;
+            dragging = true;
+            toolChoice = Number(document.getElementById("toolChoice").value);
+            colorChoice = Number(document.getElementById("colorChoice").value);
+            document.addEventListener("mousemove", doMouseMove, false);
+            document.addEventListener("mouseup", doMouseUp, false);
+        }
+
+        function doMouseMove(evt) {
+    if (!dragging) return;
+    let bounds = canvas.getBoundingClientRect();
+    let x = evt.clientX - bounds.left;
+    let y = evt.clientY - bounds.top;
+
+    if (toolChoice === 0) { // Rectangle tool
+        graphics.fillStyle = getColor(colorChoice);
+        graphics.fillRect(x-20, y-20, 40, 40);
+        graphics.strokeRect(x-20, y-20, 40, 40);
+    } else if (toolChoice === 1) { // Crescent tool
+        drawCrescent(x, y);
+    } else if (toolChoice === 2) { // Crescent Happy Face
+        drawCrescentHappyFace(x, y);
+    }
+    startX = x;
+    startY = y;
+}
+
+
+        function doMouseUp() {
+            dragging = false;
+            document.removeEventListener("mousemove", doMouseMove, false);
+            document.removeEventListener("mouseup", doMouseUp, false);
+        }
+
+        canvas.addEventListener("mousedown", doMouseDown, false);
+    }
+
+    function getColor(choice) {
+        switch (choice) {
+            case 0: return randomColorString();
+            case 1: return "red";
+            case 2: return "green";
+            case 3: return "blue";
+            case 4: return "purple";
+            default: return "black";
+        }
+    }
+
+    function randomColorString() {
+        let r = Math.floor(256 * Math.random());
+        let g = Math.floor(256 * Math.random());
+        let b = Math.floor(256 * Math.random());
+        return `rgb(${r},${g},${b})`;
+    }
+
+    function drawCrescentHappyFace(x, y) {
+        // Outer circle
+        graphics.beginPath();
+        graphics.arc(x, y, 30, 0.2 * Math.PI, 1.8 * Math.PI);
+        graphics.closePath();
+        graphics.fill();
+        // Inner circle to create crescent
+        graphics.fillStyle = "white";
+        graphics.beginPath();
+        graphics.arc(x + 20, y, 20, 0.2 * Math.PI, 1.8 * Math.PI);
+        graphics.closePath();
+        graphics.fill();
+        // Eyes
+        graphics.fillStyle = "black";
+        graphics.fillCircle(x - 10, y - 10, 3);
+        graphics.fillCircle(x + 10, y - 10, 3);
+        // Smiling mouth
+        graphics.beginPath();
+        graphics.arc(x, y, 20, 0, Math.PI, false);
+        graphics.stroke();
+    }
+function drawCrescent(x, y) {
+    // Save the current state
+    graphics.save();
+    
+    // Set composite operation for crescent effect
+    graphics.globalCompositeOperation = 'destination-out';
+    
+    // Draw the moon part
+    graphics.fillStyle = getColor(colorChoice);
+    graphics.beginPath();
+    graphics.arc(x, y, 30, 0, 2 * Math.PI, false);
+    graphics.fill();
+    
+    // Draw the shadow part
+    graphics.fillStyle = "white";
+    graphics.beginPath();
+    graphics.arc(x + 15, y, 30, 0, 2 * Math.PI, false);
+    graphics.fill();
+    
+    // Restore the state
+    graphics.restore();
+}
+
+
+    function init() {
+        canvas = document.getElementById("canvas");
+        graphics = canvas.getContext("2d");
+        graphics.strokeCircle = function(x, y, radius) {
+            this.beginPath();
+            this.arc(x, y, radius, 0, 2 * Math.PI);
+            this.stroke();
+        };
+        graphics.fillCircle = function(x, y, radius) {
+            this.beginPath();
+            this.arc(x, y, radius, 0, 2 * Math.PI);
+            this.fill();
+        };
+        installMouseHandler();
+        graphics.fillStyle = "white";
+        graphics.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function clearCanvas() {
+        graphics.clearRect(0, 0, canvas.width, canvas.height);
+        graphics.fillStyle = "white";
+        graphics.fillRect(0, 0, canvas.width, canvas.height);
+    }
+</script>
+</head>
+<body onload="init()">
+<h2>Drawing Crescent Happy Face</h2>
+<p><b>Color:</b>
+    <select id="colorChoice">
+        <option value="0">Random</option>
+        <option value="1">Red</option>
+        <option value="2">Green</option>
+        <option value="3">Blue</option>
+        <option value="4">Purple</option>
+    </select>
+</p>
+<p><b>Tool:</b>
+    <select id="toolChoice">
+        <option value="0">Rectangle</option>
+        <option value="1">Crescent</option>
+        <option value="2">Crescent Happy Face</option>
+    </select>
+</p>
+<button onclick="clearCanvas()">Clear Canvas</button>
+<div id="canvasholder">
+    <canvas id="canvas" width="800" height="600">Canvas not supported.</canvas>
+</div>
+</body>
+</html>
