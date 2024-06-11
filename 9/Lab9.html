@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      body {
+        margin: 0;
+      }
+      canvas {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.115/build/three.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.115/examples/js/controls/OrbitControls.js"></script>
+  </head>
+  <body>
+    <script>
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(
+        75,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000
+      );
+      const renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        alpha: true,
+      });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+
+      const controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.25;
+      controls.enableZoom = true;
+
+      const light = new THREE.PointLight(0xffffff, 1, 100);
+      light.position.set(10, 10, 10);
+      scene.add(light);
+
+      const material = new THREE.MeshPhongMaterial({ color: 0x1a1716 });
+
+      let black_rook = new THREE.Group();
+
+      const baseGeometry = new THREE.CylinderGeometry(0.4, 0.4, 0.1, 100);
+      const base = new THREE.Mesh(baseGeometry, material);
+      base.position.y = 0.2;
+      black_rook.add(base);
+
+      const rookGeometry_1 = new THREE.CylinderGeometry(0.8, 0.8, 0.1, 100);
+      const rookPart_1 = new THREE.Mesh(rookGeometry_1, material);
+      rookPart_1.position.y = 0.3;
+      black_rook.add(rookPart_1);
+
+      const rookGeometry_2 = new THREE.CylinderGeometry(0.45, 0.7, 0.8, 100);
+      const rookPart_2 = new THREE.Mesh(rookGeometry_2, material);
+      rookPart_2.position.y = 0.75;
+      black_rook.add(rookPart_2);
+
+      const rookGeometry_3 = new THREE.CylinderGeometry(0.55, 0.55, 0.3, 100);
+      const rookPart_3 = new THREE.Mesh(rookGeometry_3, material);
+      rookPart_3.position.y = 1.29;
+      black_rook.add(rookPart_3);
+
+      const rookGeometry_4 = new THREE.CylinderGeometry(0.6, 0.5, 0.7, 100);
+      const rookPart_4 = new THREE.Mesh(rookGeometry_4, material);
+      rookPart_4.position.y = 1.79;
+      black_rook.add(rookPart_4);
+
+      const rookGeometry_5 = new THREE.CylinderGeometry(0.75, 0.75, 0.1, 100);
+      const rookPart_5 = new THREE.Mesh(rookGeometry_5, material);
+      rookPart_5.position.y = 2.1;
+      black_rook.add(rookPart_5);
+
+      const rookGeometry_6 = new THREE.CylinderGeometry(0.8, 0.8, 0.2, 100);
+      const rookPart_6 = new THREE.Mesh(rookGeometry_6, material);
+      rookPart_6.position.y = 2.25;
+      black_rook.add(rookPart_6);
+
+      black_rook.position.set(0, -3, 1);
+      scene.add(black_rook);
+
+      camera.position.z = 5;
+
+      function animate() {
+        requestAnimationFrame(animate);
+        black_rook.rotation.y += 0.01; // Add rotation animation
+        controls.update();
+        renderer.render(scene, camera);
+      }
+
+      animate();
+
+      window.addEventListener("resize", () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+    </script>
+  </body>
+</html>
